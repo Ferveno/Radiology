@@ -41,6 +41,8 @@ public class AnswerButton : MonoBehaviour
                         // Optionally, save status here.
 
                         GameManager.instance.Score++;
+                        GameManager.instance.ScoreUpdater();
+
                     }
                 }
                 StartCoroutine(WaitForAnswerDescription());

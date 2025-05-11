@@ -22,7 +22,9 @@ public class CardManager : MonoBehaviour
     private bool noMatch = false;
 
     public GameObject MainGame2;
-    public GameObject TimerPanel;
+    public GameObject TimerTextObj;
+    public GameObject FlipsTextObj;
+
     public GameObject PowerupPanel;
 
     // --- Timer Variables ---
@@ -66,7 +68,9 @@ public class CardManager : MonoBehaviour
         SecondCard = null;
         Matches = 0;
 
-        TimerPanel.SetActive(true);
+        TimerTextObj.SetActive(true);
+        FlipsTextObj.SetActive(true);
+
         PowerupPanel.SetActive(true);
 
         remainingTime = timeLimit; // Initialize timer
@@ -118,7 +122,7 @@ public class CardManager : MonoBehaviour
     {
         if (flipsText != null)
         {
-            flipsText.text = "Flips: " + remainingFlips.ToString();
+            flipsText.text = "Flips left: " + remainingFlips.ToString();
         }
     }
 
@@ -251,9 +255,12 @@ public class CardManager : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
         MainGame2.SetActive(false);
-        TimerPanel.SetActive(false);
+        TimerTextObj.SetActive(false);
+        FlipsTextObj.SetActive(false);
         PowerupPanel.SetActive(false);
         LoseText.gameObject.SetActive(false);
+
+        GameManager.instance.OnGame2Complete();
     }
 
     void reshuffle(List<Card> list)
@@ -274,6 +281,8 @@ public class CardManager : MonoBehaviour
         if (!clockPowerupUsed && GameManager.instance.Score >= clockPowerupCost)
         {
             GameManager.instance.Score -= clockPowerupCost;
+            GameManager.instance.ScoreUpdater();
+
             remainingTime += clockExtraTime;
             clockPowerupUsed = true;
         }
@@ -286,6 +295,8 @@ public class CardManager : MonoBehaviour
         if (!glassesPowerupUsed && GameManager.instance.Score >= glassesPowerupCost)
         {
             GameManager.instance.Score -= glassesPowerupCost;
+            GameManager.instance.ScoreUpdater();
+
             glassesPowerupUsed = true;
             StartCoroutine(GlassesPowerupCoroutine());
         }
@@ -326,6 +337,8 @@ public class CardManager : MonoBehaviour
         if (!eraserPowerupUsed && GameManager.instance.Score >= eraserPowerupCost)
         {
             GameManager.instance.Score -= eraserPowerupCost;
+            GameManager.instance.ScoreUpdater();
+
             eraserPowerupUsed = true;
             int refunds = 0;
 
@@ -355,6 +368,8 @@ public class CardManager : MonoBehaviour
         if (!assistPowerupUsed && GameManager.instance.Score >= assistPowerupCost)
         {
             GameManager.instance.Score -= assistPowerupCost;
+            GameManager.instance.ScoreUpdater();
+
             assistPowerupUsed = true;
 
             // Clear any current selection.

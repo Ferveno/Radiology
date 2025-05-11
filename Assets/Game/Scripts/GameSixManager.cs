@@ -44,6 +44,7 @@ public class GameSixManager : MonoBehaviour
         {
             Debug.Log("No more unanswered questions.");
             MainGameCanvas.SetActive(false);
+            GameManager.instance.OnGame6Complete();
         }
     }
 

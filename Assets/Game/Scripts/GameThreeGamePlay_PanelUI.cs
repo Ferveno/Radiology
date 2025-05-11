@@ -88,7 +88,7 @@ public class GameThreeGamePlay_PanelUI : MonoBehaviour
 
         // Reset timer values
         currentRemainingTime = timePerQuestion;
-        timerText.text = Mathf.CeilToInt(currentRemainingTime).ToString();
+        timerText.text = "Timer: "+Mathf.CeilToInt(currentRemainingTime).ToString();
 
         // Reset answer buttons to default state
         ResetAnswerButtons();
@@ -109,11 +109,11 @@ public class GameThreeGamePlay_PanelUI : MonoBehaviour
     {
         while (currentRemainingTime > 0)
         {
-            timerText.text = Mathf.CeilToInt(currentRemainingTime).ToString();
+            timerText.text = "Timer: " + Mathf.CeilToInt(currentRemainingTime).ToString();
             currentRemainingTime -= Time.deltaTime;
             yield return null;
         }
-        timerText.text = "0";
+        timerText.text = "Timer: " + "0";
         Debug.Log("Time expired! Skipping question.");
         yield return new WaitForSeconds(1f);
         NextLevel();
@@ -140,8 +140,10 @@ public class GameThreeGamePlay_PanelUI : MonoBehaviour
         if (GameManager.instance.Score >= clockCost)
         {
             GameManager.instance.Score -= clockCost;
+            GameManager.instance.ScoreUpdater();
+
             currentRemainingTime += clockExtraSeconds;
-            timerText.text = Mathf.CeilToInt(currentRemainingTime).ToString();
+            timerText.text = "Timer: " + Mathf.CeilToInt(currentRemainingTime).ToString();
             UpdatePowerupButtonStates();
         }
         else
@@ -161,6 +163,8 @@ public class GameThreeGamePlay_PanelUI : MonoBehaviour
         if (GameManager.instance.Score >= glassesCost)
         {
             GameManager.instance.Score -= glassesCost;
+            GameManager.instance.ScoreUpdater();
+
             foreach (Button btn in optionButtons_Ref)
             {
                 TextMeshProUGUI txt = btn.GetComponentInChildren<TextMeshProUGUI>();
@@ -245,9 +249,11 @@ public class GameThreeGamePlay_PanelUI : MonoBehaviour
 
         // Deduct the Eraser cost and cancel the grace period.
         GameManager.instance.Score -= eraserCost;
+        GameManager.instance.ScoreUpdater();
+
         //UseClockPowerup();
         currentRemainingTime += clockExtraSeconds;
-        timerText.text = Mathf.CeilToInt(currentRemainingTime).ToString();
+        timerText.text = "Timer: " + Mathf.CeilToInt(currentRemainingTime).ToString();
 
         if (eraserCountdownCoroutine != null)
         {
@@ -281,6 +287,8 @@ public class GameThreeGamePlay_PanelUI : MonoBehaviour
 
         // Deduct the cost.
         GameManager.instance.Score -= aiAssistCost;
+        GameManager.instance.ScoreUpdater();
+
 
         // Mark the current level as answered.
         if (GameThreeManager.instance.currentLevel != null)
@@ -292,6 +300,7 @@ public class GameThreeGamePlay_PanelUI : MonoBehaviour
         CancelTimer();
         // Optionally increase the player's score as if they answered correctly.
         GameManager.instance.Score++;
+        GameManager.instance.ScoreUpdater();
 
         // Simulate the correct answer button feedback.
         foreach (Button btn in optionButtons_Ref)

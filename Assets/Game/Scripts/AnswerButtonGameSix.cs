@@ -33,6 +33,7 @@ public class AnswerButtonGameSix : MonoBehaviour
                     {
                         GameSixManager.instance.allLevels[i].isAnswered = true;
                         GameManager.instance.Score++;
+                        GameManager.instance.ScoreUpdater();
                     }
                 }
                 StartCoroutine(WaitForNextQuestion());

@@ -71,5 +71,7 @@ public class Card : MonoBehaviour
 
         // Increase the score.
         GameManager.instance.Score++;
+        GameManager.instance.ScoreUpdater();
+
     }
 }

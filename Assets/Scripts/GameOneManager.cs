@@ -114,12 +114,12 @@ public class GameOneManager : MonoBehaviour
     {
         while (timeRemaining > 0)
         {
-            TimerText.text = $"Time: {timeRemaining:F1}s";
+            TimerText.text = $"Time: {timeRemaining}";
             yield return new WaitForSeconds(1f);
             timeRemaining--;
         }
 
-        TimerText.text = "Time: 0s";
+        TimerText.text = "Time: 0";
         CheckIfComplete(); // Auto-progress when time runs out
     }
 
@@ -179,6 +179,7 @@ public class GameOneManager : MonoBehaviour
         TimerText.text = "All cases completed!";
 
         GameMain1.SetActive(false);
+        GameManager.instance.OnGame1Complete();
     }
 
     // Sets the active case and resets per-case variables.
@@ -204,6 +205,8 @@ public class GameOneManager : MonoBehaviour
         if (!clockPowerupUsed && GameManager.instance.Score >= clockPowerupCost)
         {
             GameManager.instance.Score -= clockPowerupCost;
+            GameManager.instance.ScoreUpdater();
+
             timeRemaining += extraTime;
             clockPowerupUsed = true;
         }
@@ -215,6 +218,8 @@ public class GameOneManager : MonoBehaviour
         if (!glassesPowerupUsed && GameManager.instance.Score >= glassesPowerupCost)
         {
             GameManager.instance.Score -= glassesPowerupCost;
+            GameManager.instance.ScoreUpdater();
+
             glassesPowerupUsed = true;
 
             if (Case1.activeInHierarchy && Case1HelpTexts != null)
@@ -258,6 +263,8 @@ public class GameOneManager : MonoBehaviour
         if (!eraserPowerupUsed && GameManager.instance.Score >= eraserPowerupCost)
         {
             GameManager.instance.Score -= eraserPowerupCost;
+            GameManager.instance.ScoreUpdater();
+
             eraserPowerupUsed = true;
             ResetGameState();
         }
@@ -334,6 +341,7 @@ public class GameOneManager : MonoBehaviour
         if (!assistPowerupUsed && GameManager.instance.Score >= assistPowerupCost)
         {
             GameManager.instance.Score -= assistPowerupCost;
+            GameManager.instance.ScoreUpdater();
             assistPowerupUsed = true;
 
             // Determine which case is active.
@@ -382,6 +390,8 @@ public class GameOneManager : MonoBehaviour
         draggable.isLocked = true;
         GameOneManager.instance.DraggablePlacedCorrectly();
         GameManager.instance.Score++; // Simulate score increment as in a correct drop.
+        GameManager.instance.ScoreUpdater();
+
     }
 
     // --- Help Text Arrays for Each Case (assumed to be declared as before) ---

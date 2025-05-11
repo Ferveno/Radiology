@@ -36,6 +36,8 @@ public class DragDrop : MonoBehaviour
 
                 GameOneManager.instance.DraggablePlacedCorrectly();
                 GameManager.instance.Score++;
+                GameManager.instance.ScoreUpdater();
+
 
             }
             else

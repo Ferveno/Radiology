@@ -3,7 +3,15 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - mainCanvas
+  - SolveQuestion
+  - Game1Key
+  - Game2Key
+  - Game3Key
+  - Game4Key
+  - Game5Key
+  - Game6Key
   layers:
   - Default
   - TransparentFX

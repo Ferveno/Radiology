@@ -240,11 +240,15 @@ public class ImageManager : MonoBehaviour
         if (swipeCorrect)
         {
             GameManager.instance.Score++;  // Increase score for a correct swipe.
+            GameManager.instance.ScoreUpdater();
+
             Debug.Log("Correct swipe! Score: " + GameManager.instance.Score);
         }
         else
         {
             GameManager.instance.Score--;  // Deduct score for an incorrect swipe.
+            GameManager.instance.ScoreUpdater();
+
             Debug.Log("Incorrect swipe. Score: " + GameManager.instance.Score);
         }
         // Unsubscribe and hide the current image.
@@ -338,6 +342,8 @@ public class ImageManager : MonoBehaviour
             {
                 timerRunning = false;
                 GameManager.instance.Score++;
+                GameManager.instance.ScoreUpdater();
+
                 tapMessageText.gameObject.SetActive(true);
                 tapMessageText.text = currentCardData.tapSuccessFeedback;
                 tapMessageBoxImage.color = Color.green;
@@ -363,6 +369,8 @@ public class ImageManager : MonoBehaviour
             {
                 timerRunning = false;
                 GameManager.instance.Score++;
+                GameManager.instance.ScoreUpdater();
+
                 tapMessageText.gameObject.SetActive(true);
                 tapMessageText.text = currentCardData.tapSuccessFeedback;
                 tapMessageBoxImage.color = Color.green;
@@ -526,6 +534,8 @@ public class ImageManager : MonoBehaviour
         mistakeOccurred = false;
         mistakePhase = MistakePhase.None;
 
+        tapInstructionText.gameObject.SetActive(false);
+
         if (imageCards != null && currentImageIndex < imageCards.Count)
         {
             imageCards[currentImageIndex].SetActive(true);
@@ -549,7 +559,17 @@ public class ImageManager : MonoBehaviour
             if (gameCompletePanel != null)
                 gameCompletePanel.SetActive(true);
             if (mainCanvas != null)
+            {
                 mainCanvas.SetActive(false);
+
+                if (this.gameObject.name == "Image Stack Panel Game 4")
+                {
+                    GameManager.instance.OnGame4Complete();
+                }
+                else { 
+                    GameManager.instance.OnGame5Complete();
+                }
+            }
             // No need to reset the flag if the game is over.
         }
     }
@@ -572,6 +592,8 @@ public class ImageManager : MonoBehaviour
         if (GameManager.instance.Score >= clockPowerupCost)
         {
             GameManager.instance.Score -= clockPowerupCost;
+            GameManager.instance.ScoreUpdater();
+
             timeRemaining += clockPowerupTimeIncrease;
             Debug.Log("Clock powerup used! Time increased by " + clockPowerupTimeIncrease + " seconds.");
         }
@@ -588,6 +610,8 @@ public class ImageManager : MonoBehaviour
         if (GameManager.instance.Score >= glassesPowerupCost && !glassesUsed)
         {
             GameManager.instance.Score -= glassesPowerupCost;
+            GameManager.instance.ScoreUpdater();
+
             glassesUsed = true;
             if (tapPanel.activeSelf)
             {
@@ -646,6 +670,8 @@ public class ImageManager : MonoBehaviour
         if (GameManager.instance.Score >= eraserPowerupCost && mistakeOccurred && !eraserUsed)
         {
             GameManager.instance.Score -= eraserPowerupCost;
+            GameManager.instance.ScoreUpdater();
+
             ResetCurrentImageState();
             Debug.Log("Eraser powerup used to undo tap mistake.");
         }
@@ -682,6 +708,8 @@ public class ImageManager : MonoBehaviour
         if (GameManager.instance.Score >= aiAssistPowerupCost)
         {
             GameManager.instance.Score -= aiAssistPowerupCost;
+            GameManager.instance.ScoreUpdater();
+
             isAIAssistActive = true;
 
             if (!currentCardData.isAbnormal)
@@ -720,6 +748,8 @@ public class ImageManager : MonoBehaviour
         }
         swipeCorrect = true;
         GameManager.instance.Score++; // Award correct swipe point.
+        GameManager.instance.ScoreUpdater();
+
         timerRunning = false;
 
         messageText.text = "Correct!\n" + currentCardData.normalFeedback;
@@ -745,6 +775,8 @@ public class ImageManager : MonoBehaviour
         // Auto-answer swipe phase.
         swipeCorrect = true;
         GameManager.instance.Score++; // Award swipe point.
+        GameManager.instance.ScoreUpdater();
+
         timerRunning = false;
 
         messageText.text = "Correct!\n" + currentCardData.abnormalFeedback;
@@ -754,6 +786,8 @@ public class ImageManager : MonoBehaviour
         messageBoxPanel.SetActive(false);
         // Now auto-answer tap phase.
         GameManager.instance.Score++; // Award tap bonus.
+        GameManager.instance.ScoreUpdater();
+
         tapMessageText.text = currentCardData.tapSuccessFeedback;
         tapMessageBoxImage.color = Color.green;
         tapMessageBoxPanel.SetActive(true);
@@ -776,6 +810,8 @@ public class ImageManager : MonoBehaviour
             currentImage = null;
         }
         GameManager.instance.Score++; // Award tap bonus.
+        GameManager.instance.ScoreUpdater();
+
         tapMessageText.text = currentCardData.tapSuccessFeedback;
         tapMessageBoxImage.color = Color.green;
         tapMessageBoxPanel.SetActive(true);

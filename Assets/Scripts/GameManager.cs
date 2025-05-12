@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+using DG.Tweening;
 
 public class GameManager : MonoBehaviour
 {
@@ -43,6 +45,9 @@ public class GameManager : MonoBehaviour
     public GameObject HelpSubpanel1;
     public GameObject HelpSubpanel2;
 
+    public GameObject GameOverPanel;
+    public Slider ResultScoreBar;
+    public TextMeshProUGUI finalScoreText;
 
     private void Awake()
     {
@@ -227,5 +232,51 @@ public class GameManager : MonoBehaviour
     public void OnClickQuitButton() {
         Application.Quit();
     }
+
+    public void OnGameOver()
+    {
+        GameOverPanel.SetActive(true);
+
+        float duration = 1.5f;
+        int finalScore = Score;    // your score variable
+        Ease easeType = Ease.OutCubic;
+
+        // grab the Image component on the fill
+        Image fillImage = ResultScoreBar.fillRect.GetComponent<Image>();
+
+        // reset slider & text
+        ResultScoreBar.value = 0;
+        finalScoreText.text = "0";
+        fillImage.color = Color.red; // start color
+
+        // 1) Slider tween with color thresholds and end punch
+        ResultScoreBar
+            .DOValue(finalScore, duration)
+            .SetEase(easeType)
+            .OnUpdate(() =>
+            {
+                float v = ResultScoreBar.value;
+                if (v < 30f) fillImage.color = Color.red;
+                else if (v < 60f) fillImage.color = Color.yellow;
+                else fillImage.color = Color.green;
+            })
+            .OnComplete(() =>
+            {
+                // punch when bar finishes
+                ResultScoreBar.fillRect
+                    .DOPunchScale(Vector3.one * 0.05f, 0.3f, 3, 1f);
+            });
+
+        // 2) Text count-up (unchanged)
+        int current = 0;
+        DOTween
+            .To(() => current, x =>
+            {
+                current = x;
+                finalScoreText.text = "Your Score: " + x.ToString() + "/98";
+            }, finalScore, duration)
+            .SetEase(easeType);
+    }
+
 
 }

@@ -45,9 +45,11 @@ public class GameManager : MonoBehaviour
     public GameObject HelpSubpanel1;
     public GameObject HelpSubpanel2;
 
+    int MaxPossibleScore = 98;
     public GameObject GameOverPanel;
     public Slider ResultScoreBar;
     public TextMeshProUGUI finalScoreText;
+    public TextMeshProUGUI feedbackText;
 
     private void Awake()
     {
@@ -193,11 +195,13 @@ public class GameManager : MonoBehaviour
     {
         Game6.SetActive(false);
 
-        PlayerCamera.SetActive(true);
-        Game2Camera.SetActive(false);
+       // PlayerCamera.SetActive(true);
+        Game2Camera.SetActive(true);
 
-        JoyStickCanvas.SetActive(true);
+        //JoyStickCanvas.SetActive(true);
         ScoreText.rectTransform.anchoredPosition = new Vector3(0f, 0f, 0f);
+
+        OnGameOver();
     }
 
     /// <summary>
@@ -236,47 +240,75 @@ public class GameManager : MonoBehaviour
     public void OnGameOver()
     {
         GameOverPanel.SetActive(true);
+        feedbackText.gameObject.SetActive(false);      // hide feedback until ready
 
         float duration = 1.5f;
-        int finalScore = Score;    // your score variable
+        int finalScore = Score;                      // your runtime score
         Ease easeType = Ease.OutCubic;
 
         // grab the Image component on the fill
         Image fillImage = ResultScoreBar.fillRect.GetComponent<Image>();
 
-        // reset slider & text
+        // initial states
         ResultScoreBar.value = 0;
-        finalScoreText.text = "0";
-        fillImage.color = Color.red; // start color
+        finalScoreText.text = "Your Score: 0/" + MaxPossibleScore;
+        fillImage.color = Color.red;
 
-        // 1) Slider tween with color thresholds and end punch
-        ResultScoreBar
-            .DOValue(finalScore, duration)
-            .SetEase(easeType)
-            .OnUpdate(() =>
-            {
-                float v = ResultScoreBar.value;
-                if (v < 30f) fillImage.color = Color.red;
-                else if (v < 60f) fillImage.color = Color.yellow;
-                else fillImage.color = Color.green;
-            })
-            .OnComplete(() =>
-            {
-                // punch when bar finishes
-                ResultScoreBar.fillRect
-                    .DOPunchScale(Vector3.one * 0.05f, 0.3f, 3, 1f);
-            });
+        // build a single Sequence
+        var seq = DOTween.Sequence();
 
-        // 2) Text count-up (unchanged)
-        int current = 0;
-        DOTween
-            .To(() => current, x =>
+        // 1) Animate the bar fill
+        seq.Append(
+            ResultScoreBar
+                .DOValue(finalScore, duration)
+                .SetEase(easeType)
+                .OnUpdate(() =>
+                {
+                    float v = ResultScoreBar.value;
+                    if (v < 30f) fillImage.color = Color.red;
+                    else if (v < 60f) fillImage.color = Color.yellow;
+                    else fillImage.color = Color.green;
+                })
+        );
+
+        // 2) In parallel, animate the score text count-up
+        seq.Join(
+            DOTween.To(() => 0, x =>
             {
-                current = x;
-                finalScoreText.text = "Your Score: " + x.ToString() + "/98";
+                finalScoreText.text = $"Your Score: {x}/{MaxPossibleScore}";
             }, finalScore, duration)
-            .SetEase(easeType);
+            .SetEase(easeType)
+        );
+
+        // 3) When *both* tweens finish…
+        seq.OnComplete(() =>
+        {
+            // a) punch the bar for a little bounce
+            ResultScoreBar.fillRect
+                .DOPunchScale(Vector3.one * 0.05f, 0.3f, 3, 1f);
+
+            // b) decide feedback text and color
+            string msg;
+            Color col;
+            if (finalScore < 30) { msg = "You can do a lot better"; col = Color.red; }
+            else if (finalScore < 60) { msg = "Satisfactory"; col = Color.yellow; }
+            else { msg = "You did great!"; col = Color.green; }
+
+            feedbackText.text = msg;
+            feedbackText.color = col;
+            feedbackText.transform.localScale = Vector3.zero;
+            feedbackText.gameObject.SetActive(true);
+
+            // c) animate feedback popping in
+            feedbackText.transform
+                .DOScale(1f, 0.5f)
+                .SetEase(Ease.OutBack);
+        });
+
+        // 4) start it
+        seq.Play();
     }
+
 
 
 }

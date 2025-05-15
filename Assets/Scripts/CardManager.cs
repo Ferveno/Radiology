@@ -259,7 +259,7 @@ public class CardManager : MonoBehaviour
         FlipsTextObj.SetActive(false);
         PowerupPanel.SetActive(false);
         LoseText.gameObject.SetActive(false);
-
+        WinText.SetActive(false);
         GameManager.instance.OnGame2Complete();
     }
 

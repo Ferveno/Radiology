@@ -6,6 +6,7 @@ public class RandomEnemyMovement : MonoBehaviour
     private Vector2 movementDirection;
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
+    public int scoreToEat=1;
 
     private void Start()
     {
@@ -32,6 +33,11 @@ public class RandomEnemyMovement : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         BounceAway(collision);
+
+        if (collision.gameObject.tag == "Player") {
+            GameManager.instance.Score = GameManager.instance.Score - scoreToEat;
+            GameManager.instance.ScoreUpdater();
+        }
     }
 
     private void BounceAway(Collision2D collision)

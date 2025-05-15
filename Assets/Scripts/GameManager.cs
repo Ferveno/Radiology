@@ -44,12 +44,21 @@ public class GameManager : MonoBehaviour
     public GameObject HelpPanel;
     public GameObject HelpSubpanel1;
     public GameObject HelpSubpanel2;
+    public GameObject HelpSubpanel3;
 
     int MaxPossibleScore = 98;
     public GameObject GameOverPanel;
     public Slider ResultScoreBar;
     public TextMeshProUGUI finalScoreText;
     public TextMeshProUGUI feedbackText;
+
+    public GameObject PlayerCam;
+    public GameObject PlayerVirtualCam;
+    public GameObject Game2Cam;
+
+    public GameObject ScoreHolder;
+
+    public GameObject Player;
 
     private void Awake()
     {
@@ -80,6 +89,8 @@ public class GameManager : MonoBehaviour
         Game1.SetActive(true);
         Game1Key.SetActive(false);
         ScoreText.rectTransform.anchoredPosition = new Vector3(735f, 0f, 0f);
+        ScoreHolder.SetActive(false);
+        Player.gameObject.tag = "Untagged";
     }
 
 
@@ -88,6 +99,9 @@ public class GameManager : MonoBehaviour
         Room2Hurldes.SetActive(false);
         JoyStickCanvas.SetActive(true);
         ScoreText.rectTransform.anchoredPosition = new Vector3(0f, 0f, 0f);
+        ScoreHolder.SetActive(true);
+        Player.gameObject.tag = "Player";
+
     }
 
 
@@ -99,6 +113,8 @@ public class GameManager : MonoBehaviour
         Game2.SetActive(true);
         Game2Key.SetActive(false);
         ScoreText.rectTransform.anchoredPosition = new Vector3(735f, 0f, 0f);
+        ScoreHolder.SetActive(false);
+        Player.gameObject.tag = "Untagged";
     }
     public void OnGame2Complete()
     {
@@ -108,6 +124,8 @@ public class GameManager : MonoBehaviour
         Game2Camera.SetActive(false);
         Game2.SetActive(false);
         ScoreText.rectTransform.anchoredPosition = new Vector3(0f, 0f, 0f);
+        ScoreHolder.SetActive(true);
+        Player.gameObject.tag = "Player";
     }
 
     public void OnGame3Start()
@@ -116,6 +134,8 @@ public class GameManager : MonoBehaviour
         Game3.SetActive(true);
         Game3Key.SetActive(false);
         ScoreText.rectTransform.anchoredPosition = new Vector3(180f, -960f, 0f);
+        ScoreHolder.SetActive(false);
+        Player.gameObject.tag = "Untagged";
     }
 
 
@@ -125,6 +145,8 @@ public class GameManager : MonoBehaviour
         Room4Hurldes.SetActive(false);
         JoyStickCanvas.SetActive(true);
         ScoreText.rectTransform.anchoredPosition = new Vector3(0f, 0f, 0f);
+        ScoreHolder.SetActive(true);
+        Player.gameObject.tag = "Player";
     }
 
     public void OnGame4Start()
@@ -137,6 +159,8 @@ public class GameManager : MonoBehaviour
         Game4.SetActive(true);
         Game4Key.SetActive(false);
         ScoreText.rectTransform.anchoredPosition = new Vector3(730f, -980f, 0f);
+        ScoreHolder.SetActive(false);
+        Player.gameObject.tag = "Untagged";
     }
 
 
@@ -150,6 +174,8 @@ public class GameManager : MonoBehaviour
         Room5Hurldes.SetActive(false);
         JoyStickCanvas.SetActive(true);
         ScoreText.rectTransform.anchoredPosition = new Vector3(0f, 0f, 0f);
+        ScoreHolder.SetActive(true);
+        Player.gameObject.tag = "Player";
     }
 
     public void OnGame5Start()
@@ -162,6 +188,8 @@ public class GameManager : MonoBehaviour
         Game5.SetActive(true);
         Game5Key.SetActive(false);
         ScoreText.rectTransform.anchoredPosition = new Vector3(730f, -980f, 0f);
+        ScoreHolder.SetActive(false);
+        Player.gameObject.tag = "Untagged";
     }
 
 
@@ -175,6 +203,8 @@ public class GameManager : MonoBehaviour
         Room6Hurldes.SetActive(false);
         JoyStickCanvas.SetActive(true);
         ScoreText.rectTransform.anchoredPosition = new Vector3(0f, 0f, 0f);
+        ScoreHolder.SetActive(true);
+        Player.gameObject.tag = "Player";
     }
 
     public void OnGame6Start()
@@ -187,7 +217,8 @@ public class GameManager : MonoBehaviour
         Game6.SetActive(true);
         Game6Key.SetActive(false);
         ScoreText.rectTransform.anchoredPosition = new Vector3(730f, -980f, 0f);
-
+        ScoreHolder.SetActive(false);
+        Player.gameObject.tag = "Untagged";
     }
 
 
@@ -200,6 +231,8 @@ public class GameManager : MonoBehaviour
 
         //JoyStickCanvas.SetActive(true);
         ScoreText.rectTransform.anchoredPosition = new Vector3(0f, 0f, 0f);
+        ScoreHolder.SetActive(true);
+        Player.gameObject.tag = "Player";
 
         OnGameOver();
     }
@@ -209,6 +242,12 @@ public class GameManager : MonoBehaviour
     /// </summary>
 
     public void OnClickStartButton() {
+
+        PlayerCam.SetActive(true);
+        PlayerVirtualCam.SetActive(true);
+
+        Game2Cam.SetActive(false);
+
         HelpPanel.SetActive(false);
         MainMenuPanel.SetActive(false);
         JoyStickCanvas.SetActive(true);
@@ -221,15 +260,23 @@ public class GameManager : MonoBehaviour
         JoyStickCanvas.SetActive(false);
     }
 
-    public void OnClickHelpPanelNextButton() { 
+    public void OnClickHelpPanel1NextButton() { 
         HelpSubpanel1.SetActive(false);
         HelpSubpanel2.SetActive(true);
+        HelpSubpanel3.SetActive(false);
+    }
+
+    public void OnClickHelpPanel2NextButton()
+    {
+        HelpSubpanel1.SetActive(false);
+        HelpSubpanel2.SetActive(false);
+        HelpSubpanel3.SetActive(true);
     }
 
     public void OnClickHelpPanelGotitButton()
     {
         HelpSubpanel1.SetActive(false);
-        HelpSubpanel2.SetActive(false);
+        HelpSubpanel3.SetActive(false);
         HelpPanel.SetActive(false);
     }
 

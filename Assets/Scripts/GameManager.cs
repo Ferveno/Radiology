@@ -91,6 +91,10 @@ public class GameManager : MonoBehaviour
         ScoreText.rectTransform.anchoredPosition = new Vector3(735f, 0f, 0f);
         ScoreHolder.SetActive(false);
         Player.gameObject.tag = "Untagged";
+
+        PlayerCam.SetActive(false);
+        PlayerVirtualCam.SetActive(false);
+        Game2Cam.SetActive(true);
     }
 
 
@@ -102,6 +106,9 @@ public class GameManager : MonoBehaviour
         ScoreHolder.SetActive(true);
         Player.gameObject.tag = "Player";
 
+        PlayerCam.SetActive(true);
+        PlayerVirtualCam.SetActive(true);
+        Game2Cam.SetActive(false);
     }
 
 
@@ -136,6 +143,11 @@ public class GameManager : MonoBehaviour
         ScoreText.rectTransform.anchoredPosition = new Vector3(180f, -960f, 0f);
         ScoreHolder.SetActive(false);
         Player.gameObject.tag = "Untagged";
+
+
+        PlayerCam.SetActive(false);
+        PlayerVirtualCam.SetActive(false);
+        Game2Cam.SetActive(true);
     }
 
 
@@ -147,6 +159,10 @@ public class GameManager : MonoBehaviour
         ScoreText.rectTransform.anchoredPosition = new Vector3(0f, 0f, 0f);
         ScoreHolder.SetActive(true);
         Player.gameObject.tag = "Player";
+
+        PlayerCam.SetActive(true);
+        PlayerVirtualCam.SetActive(true);
+        Game2Cam.SetActive(false);
     }
 
     public void OnGame4Start()
@@ -161,6 +177,10 @@ public class GameManager : MonoBehaviour
         ScoreText.rectTransform.anchoredPosition = new Vector3(730f, -980f, 0f);
         ScoreHolder.SetActive(false);
         Player.gameObject.tag = "Untagged";
+
+        PlayerCam.SetActive(false);
+        PlayerVirtualCam.SetActive(false);
+        Game2Cam.SetActive(true);
     }
 
 
@@ -176,6 +196,10 @@ public class GameManager : MonoBehaviour
         ScoreText.rectTransform.anchoredPosition = new Vector3(0f, 0f, 0f);
         ScoreHolder.SetActive(true);
         Player.gameObject.tag = "Player";
+
+        PlayerCam.SetActive(true);
+        PlayerVirtualCam.SetActive(true);
+        Game2Cam.SetActive(false);
     }
 
     public void OnGame5Start()
@@ -190,6 +214,10 @@ public class GameManager : MonoBehaviour
         ScoreText.rectTransform.anchoredPosition = new Vector3(730f, -980f, 0f);
         ScoreHolder.SetActive(false);
         Player.gameObject.tag = "Untagged";
+
+        PlayerCam.SetActive(false);
+        PlayerVirtualCam.SetActive(false);
+        Game2Cam.SetActive(true);
     }
 
 
@@ -205,6 +233,10 @@ public class GameManager : MonoBehaviour
         ScoreText.rectTransform.anchoredPosition = new Vector3(0f, 0f, 0f);
         ScoreHolder.SetActive(true);
         Player.gameObject.tag = "Player";
+
+        PlayerCam.SetActive(true);
+        PlayerVirtualCam.SetActive(true);
+        Game2Cam.SetActive(false);
     }
 
     public void OnGame6Start()
@@ -219,6 +251,10 @@ public class GameManager : MonoBehaviour
         ScoreText.rectTransform.anchoredPosition = new Vector3(730f, -980f, 0f);
         ScoreHolder.SetActive(false);
         Player.gameObject.tag = "Untagged";
+
+        PlayerCam.SetActive(false);
+        PlayerVirtualCam.SetActive(false);
+        Game2Cam.SetActive(true);
     }
 
 
@@ -233,6 +269,10 @@ public class GameManager : MonoBehaviour
         ScoreText.rectTransform.anchoredPosition = new Vector3(0f, 0f, 0f);
         ScoreHolder.SetActive(true);
         Player.gameObject.tag = "Player";
+
+        PlayerCam.SetActive(true);
+        PlayerVirtualCam.SetActive(true);
+        Game2Cam.SetActive(false);
 
         OnGameOver();
     }

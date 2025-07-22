@@ -35,8 +35,12 @@ public class RandomEnemyMovement : MonoBehaviour
         BounceAway(collision);
 
         if (collision.gameObject.tag == "Player") {
-            GameManager.instance.Score = GameManager.instance.Score - scoreToEat;
-            GameManager.instance.ScoreUpdater();
+
+            if (GameManager.instance.Score > 0)
+            {
+                GameManager.instance.Score = GameManager.instance.Score - scoreToEat;
+                GameManager.instance.ScoreUpdater();
+            }
         }
     }
 

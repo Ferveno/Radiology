@@ -98,7 +98,7 @@ public class GameOneManager : MonoBehaviour
     private void StartCase1()
     {
         SetActiveCase(Case1);
-        StartTimer();
+        //StartTimer();
     }
 
     private void StartTimer()
@@ -160,14 +160,14 @@ public class GameOneManager : MonoBehaviour
     {
         CorrectCount = 0;
         SetActiveCase(Case2);
-        StartTimer();
+        //StartTimer();
     }
 
     private void ProceedToCase3()
     {
         CorrectCount = 0;
         SetActiveCase(Case3);
-        StartTimer();
+        //StartTimer();
     }
 
     private void AllCasesCompleted()

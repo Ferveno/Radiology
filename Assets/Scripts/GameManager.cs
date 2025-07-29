@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -57,8 +57,21 @@ public class GameManager : MonoBehaviour
     public GameObject Game2Cam;
 
     public GameObject ScoreHolder;
+    public GameObject Minimap;
+    public GameObject MissionProgressUI;
+
 
     public GameObject Player;
+
+    [Header("Mission Progress UI")]
+    public Slider missionProgressBar;               // drag in your Slider
+    public TextMeshProUGUI missionProgressText;     // drag in your "x / 6" label
+
+    private int completedMissions = 0;
+    private const int totalMissions = 6;
+
+    private float progressAnimDuration = 0.8f;    // how long the fill takes
+    private Ease progressEase = Ease.OutCubic;
 
     private void Awake()
     {
@@ -77,7 +90,53 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         JoyStickCanvas.SetActive(false);
+
+        // initialize mission bar/text
+        missionProgressBar.maxValue = totalMissions;
+        missionProgressBar.value = 0;
+        missionProgressText.text = $"0 / {totalMissions}";
     }
+
+    private void AnimateMissionProgress()
+    {
+        // clamp just in case
+        completedMissions = Mathf.Clamp(completedMissions + 1, 0, totalMissions);
+
+        // build a DOTween sequence
+        var seq = DOTween.Sequence();
+
+        // 1) tween the slider fill
+        seq.Append(
+            missionProgressBar
+                .DOValue(completedMissions, progressAnimDuration)
+                .SetEase(progressEase)
+        );
+
+        // 2) in parallel, tween the text count‑up
+        seq.Join(
+            DOTween.To(() => 0, x =>
+            {
+                missionProgressText.text = $"{x} / {totalMissions}";
+            }, completedMissions, progressAnimDuration)
+            .SetEase(progressEase)
+        );
+
+        // 3) when both are done, do the “pop” on bar & text
+        seq.OnComplete(() =>
+        {
+            // a) bar fill punch
+            // missionProgressBar.fillRect is the RectTransform of the Fill area
+            missionProgressBar.fillRect
+                .DOPunchScale(Vector3.one * 0.1f, 0.4f, 3, 1f);
+
+            // b) text punch
+            missionProgressText.transform
+                .DOPunchScale(Vector3.one * 0.2f, 0.4f, 3, 1f);
+        });
+
+        seq.Play();
+    }
+
 
     public void ScoreUpdater() {
         ScoreText.text = "Score:" + Score;
@@ -90,6 +149,9 @@ public class GameManager : MonoBehaviour
         Game1Key.SetActive(false);
         ScoreText.rectTransform.anchoredPosition = new Vector3(735f, 0f, 0f);
         ScoreHolder.SetActive(false);
+        Minimap.SetActive(false);
+        MissionProgressUI.SetActive(false);
+
         Player.gameObject.tag = "Untagged";
 
         PlayerCam.SetActive(false);
@@ -104,11 +166,16 @@ public class GameManager : MonoBehaviour
         JoyStickCanvas.SetActive(true);
         ScoreText.rectTransform.anchoredPosition = new Vector3(0f, 0f, 0f);
         ScoreHolder.SetActive(true);
+        Minimap.SetActive(true);
+        MissionProgressUI.SetActive(true);
+
         Player.gameObject.tag = "Player";
 
         PlayerCam.SetActive(true);
         PlayerVirtualCam.SetActive(true);
         Game2Cam.SetActive(false);
+
+        AnimateMissionProgress();
     }
 
 
@@ -121,6 +188,9 @@ public class GameManager : MonoBehaviour
         Game2Key.SetActive(false);
         ScoreText.rectTransform.anchoredPosition = new Vector3(735f, 0f, 0f);
         ScoreHolder.SetActive(false);
+        Minimap.SetActive(false);
+        MissionProgressUI.SetActive(false);
+
         Player.gameObject.tag = "Untagged";
     }
     public void OnGame2Complete()
@@ -132,7 +202,12 @@ public class GameManager : MonoBehaviour
         Game2.SetActive(false);
         ScoreText.rectTransform.anchoredPosition = new Vector3(0f, 0f, 0f);
         ScoreHolder.SetActive(true);
+        Minimap.SetActive(true);
+        MissionProgressUI.SetActive(true);
+
         Player.gameObject.tag = "Player";
+
+        AnimateMissionProgress();
     }
 
     public void OnGame3Start()
@@ -142,6 +217,9 @@ public class GameManager : MonoBehaviour
         Game3Key.SetActive(false);
         ScoreText.rectTransform.anchoredPosition = new Vector3(180f, -960f, 0f);
         ScoreHolder.SetActive(false);
+        Minimap.SetActive(false);
+        MissionProgressUI.SetActive(false);
+
         Player.gameObject.tag = "Untagged";
 
 
@@ -158,11 +236,16 @@ public class GameManager : MonoBehaviour
         JoyStickCanvas.SetActive(true);
         ScoreText.rectTransform.anchoredPosition = new Vector3(0f, 0f, 0f);
         ScoreHolder.SetActive(true);
+        Minimap.SetActive(true);
+        MissionProgressUI.SetActive(true);
+
         Player.gameObject.tag = "Player";
 
         PlayerCam.SetActive(true);
         PlayerVirtualCam.SetActive(true);
         Game2Cam.SetActive(false);
+
+        AnimateMissionProgress();
     }
 
     public void OnGame4Start()
@@ -176,6 +259,9 @@ public class GameManager : MonoBehaviour
         Game4Key.SetActive(false);
         ScoreText.rectTransform.anchoredPosition = new Vector3(730f, -980f, 0f);
         ScoreHolder.SetActive(false);
+        Minimap.SetActive(false);
+        MissionProgressUI.SetActive(false);
+
         Player.gameObject.tag = "Untagged";
 
         PlayerCam.SetActive(false);
@@ -195,11 +281,16 @@ public class GameManager : MonoBehaviour
         JoyStickCanvas.SetActive(true);
         ScoreText.rectTransform.anchoredPosition = new Vector3(0f, 0f, 0f);
         ScoreHolder.SetActive(true);
+        Minimap.SetActive(true);
+        MissionProgressUI.SetActive(true);
+
         Player.gameObject.tag = "Player";
 
         PlayerCam.SetActive(true);
         PlayerVirtualCam.SetActive(true);
         Game2Cam.SetActive(false);
+
+        AnimateMissionProgress();
     }
 
     public void OnGame5Start()
@@ -213,6 +304,9 @@ public class GameManager : MonoBehaviour
         Game5Key.SetActive(false);
         ScoreText.rectTransform.anchoredPosition = new Vector3(730f, -980f, 0f);
         ScoreHolder.SetActive(false);
+        Minimap.SetActive(false);
+        MissionProgressUI.SetActive(false);
+
         Player.gameObject.tag = "Untagged";
 
         PlayerCam.SetActive(false);
@@ -232,11 +326,16 @@ public class GameManager : MonoBehaviour
         JoyStickCanvas.SetActive(true);
         ScoreText.rectTransform.anchoredPosition = new Vector3(0f, 0f, 0f);
         ScoreHolder.SetActive(true);
+        Minimap.SetActive(true);
+        MissionProgressUI.SetActive(true);
+
         Player.gameObject.tag = "Player";
 
         PlayerCam.SetActive(true);
         PlayerVirtualCam.SetActive(true);
         Game2Cam.SetActive(false);
+
+        AnimateMissionProgress();
     }
 
     public void OnGame6Start()
@@ -250,6 +349,9 @@ public class GameManager : MonoBehaviour
         Game6Key.SetActive(false);
         ScoreText.rectTransform.anchoredPosition = new Vector3(730f, -980f, 0f);
         ScoreHolder.SetActive(false);
+        Minimap.SetActive(false);
+        MissionProgressUI.SetActive(false);
+
         Player.gameObject.tag = "Untagged";
 
         PlayerCam.SetActive(false);
@@ -268,11 +370,16 @@ public class GameManager : MonoBehaviour
         //JoyStickCanvas.SetActive(true);
         ScoreText.rectTransform.anchoredPosition = new Vector3(0f, 0f, 0f);
         ScoreHolder.SetActive(true);
+        Minimap.SetActive(true);
+        MissionProgressUI.SetActive(true);
+
         Player.gameObject.tag = "Player";
 
         PlayerCam.SetActive(true);
         PlayerVirtualCam.SetActive(true);
         Game2Cam.SetActive(false);
+
+        AnimateMissionProgress();
 
         OnGameOver();
     }
@@ -367,7 +474,7 @@ public class GameManager : MonoBehaviour
             .SetEase(easeType)
         );
 
-        // 3) When *both* tweens finish�
+        // 3) When *both* tweens finish…
         seq.OnComplete(() =>
         {
             // a) punch the bar for a little bounce
@@ -395,7 +502,4 @@ public class GameManager : MonoBehaviour
         // 4) start it
         seq.Play();
     }
-
-
-
 }

@@ -1,4 +1,4 @@
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
@@ -6,81 +6,75 @@ using UnityEngine.UI;
 public class AnswerButton : MonoBehaviour
 {
     UnityEngine.UI.Button button;
+    private TextMeshProUGUI answerText;
 
     private void Start()
     {
-        button = GetComponent<UnityEngine.UI.Button>();
+        button = GetComponent<Button>();
+        answerText = GetComponentInChildren<TextMeshProUGUI>();
         button.onClick.AddListener(OnClick);
     }
 
     private void OnClick()
     {
-        // Disable all answer buttons so that only one click is registered per question.
-        foreach (Button btn in GameThreeGamePlay_PanelUI.instance.optionButtons_Ref)
-        {
+        StartCoroutine(ProcessAnswer());
+    }
+
+    private IEnumerator ProcessAnswer()
+    {
+        var ui = GameThreeGamePlay_PanelUI.instance;
+        var mgr = GameThreeManager.instance;
+
+        // 1. Disable all buttons and cancel timer
+        foreach (var btn in ui.optionButtons_Ref)
             btn.interactable = false;
-        }
+        ui.CancelTimer();
 
-        // Cancel the timer since the player has made a choice.
-        GameThreeGamePlay_PanelUI.instance.CancelTimer();
+        // 2. Determine correctness & mark as answered
+        bool isCorrect = answerText.text == mgr.currentLevel.correctAnswer;
+        mgr.currentLevel.isAnswered = true;
+        int idx = mgr.allLevels.IndexOf(mgr.currentLevel);
+        //PlayerPrefs.SetInt("CheckStatus" + idx, 1);
+        //PlayerPrefs.Save();
 
-        TextMeshProUGUI answerText = GetComponentInChildren<TextMeshProUGUI>();
-        if (answerText != null)
+        // 3. Color the chosen button
+        answerText.color = Color.white;
+        button.image.color = isCorrect ? Color.green : Color.red;
+
+        // 4. If wrong, also highlight the correct button in green
+        if (!isCorrect)
         {
-            string buttonTextString = answerText.text;
-            if (buttonTextString == GameThreeManager.instance.currentLevel.correctAnswer)
+            foreach (var btn in ui.optionButtons_Ref)
             {
-                answerText.color = Color.white;
-                button.image.color = Color.green;
-
-                for (int i = 0; i < GameThreeManager.instance.allLevels.Count; i++)
+                var txt = btn.GetComponentInChildren<TextMeshProUGUI>();
+                if (txt != null && txt.text == mgr.currentLevel.correctAnswer)
                 {
-                    if (GameThreeManager.instance.allLevels[i] == GameThreeManager.instance.currentLevel)
-                    {
-                        GameThreeManager.instance.allLevels[i].isAnswered = true;
-                        // Optionally, save status here.
-
-                        GameManager.instance.Score++;
-                        GameManager.instance.ScoreUpdater();
-
-                    }
+                    txt.color = Color.white;
+                    btn.image.color = Color.green;
+                    break;
                 }
-                StartCoroutine(WaitForAnswerDescription());
-            }
-            else
-            {
-                OnClick_WrongButton();
-                answerText.color = Color.white;
-                button.image.color = Color.red;
             }
         }
-    }
-
-    void OnClick_WrongButton()
-    {
-        for (int i = 0; i < GameThreeGamePlay_PanelUI.instance.optionButtons_Ref.Length; i++)
+        else
         {
-            if (GameThreeGamePlay_PanelUI.instance.optionButtons_Ref[i].GetComponentInChildren<TextMeshProUGUI>().text == GameThreeManager.instance.currentLevel.correctAnswer)
-            {
-                GameThreeGamePlay_PanelUI.instance.optionButtons_Ref[i].image.color = Color.green;
-            }
+            // award points only on correct
+            GameManager.instance.Score++;
+            GameManager.instance.ScoreUpdater();
         }
 
-        // Call the new wrong-answer handling routine.
-        GameThreeGamePlay_PanelUI.instance.HandleWrongAnswer();
-    }
-
-    public IEnumerator WaitForAnswerDescription()
-    {
+        // 5. Short delay so players see the color feedback
         yield return new WaitForSeconds(0.5f);
-        GameThreeGamePlay_PanelUI.instance.questionImage.sprite = GameThreeManager.instance.currentLevel.correctAnswerSprite;
-        GameThreeGamePlay_PanelUI.instance.correctAnswerPanel.gameObject.SetActive(true);
-        yield return new WaitForSeconds(2);
-        GameThreeGamePlay_PanelUI.instance.correctAnswerPanel.gameObject.SetActive(true);
-        yield return new WaitForSeconds(7);
-        GameThreeGamePlay_PanelUI.instance.correctAnswerPanel.gameObject.SetActive(false);
-        GameThreeGamePlay_PanelUI.instance.NextLevel();
-    }
 
-    // Optionally, you can remove the old WaitForNextQuestion coroutine if it is no longer needed.
+        // 6. Show explanation panel
+        ui.questionImage.sprite = mgr.currentLevel.correctAnswerSprite;
+        ui.correctAnswerPanel.SetActive(true);
+
+        // 7. Keep panel up for your existing delays
+        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(7f);
+
+        // 8. Hide panel and advance
+        ui.correctAnswerPanel.SetActive(false);
+        ui.NextLevel();
+    }
 }

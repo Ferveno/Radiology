@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
@@ -70,6 +70,9 @@ public class ImageManager : MonoBehaviour
     public GameObject swipeArrowLeft;
     public GameObject swipeArrowRight;
 
+    [Header("Case Counter UI")]
+    public TextMeshProUGUI caseCounterText;
+
     // Variables to track if a tap-phase mistake occurred (for Eraser availability).
     private bool mistakeOccurred = false;
     private enum MistakePhase { None, Swipe, Tap }
@@ -130,6 +133,9 @@ public class ImageManager : MonoBehaviour
         {
             Debug.LogError("No image cards assigned to the ImageManager!");
         }
+
+        UpdateCaseCounter();
+
     }
 
     private void Update()
@@ -159,7 +165,7 @@ public class ImageManager : MonoBehaviour
             glassesPowerupButton.interactable = (!glassesUsed && GameManager.instance.Score >= glassesPowerupCost);
         }
 
-        // Eraser powerup button is enabled only if a tap-phase mistake occurred, Eraser hasn�t been used,
+        // Eraser powerup button is enabled only if a tap-phase mistake occurred, Eraser hasn’t been used,
         // and if the player has enough score.
         if (eraserPowerupButton != null && GameManager.instance != null)
         {
@@ -193,7 +199,7 @@ public class ImageManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Unsubscribe from the current image�s swipe event.
+    /// Unsubscribe from the current image’s swipe event.
     /// </summary>
     void UnsubscribeFromCurrentImage()
     {
@@ -233,7 +239,7 @@ public class ImageManager : MonoBehaviour
         else
         {
             swipeCorrect = false;
-            // For swipe phase, we no longer offer Eraser�mistakes simply update the score.
+            // For swipe phase, we no longer offer Eraser—mistakes simply update the score.
         }
 
         // Update score based on the swipe result.
@@ -528,6 +534,9 @@ public class ImageManager : MonoBehaviour
         isLoadingNextImage = true;
 
         currentImageIndex++;
+
+        UpdateCaseCounter();
+
         // Reset per-image powerup flags.
         glassesUsed = false;
         eraserUsed = false;
@@ -581,7 +590,18 @@ public class ImageManager : MonoBehaviour
         isLoadingNextImage = false;
     }
 
-
+    /// <summary>
+    /// Updates the “Case x/total” label based on currentImageIndex.
+    /// </summary>
+    void UpdateCaseCounter()
+    {
+        if (caseCounterText != null && imageCards != null)
+        {
+            int total = imageCards.Count;
+            int done = currentImageIndex + 1;    // index is zero‑based
+            caseCounterText.text = $"Case {done}/{total}";
+        }
+    }
 
     /// <summary>
     /// Called by the Clock powerup button.

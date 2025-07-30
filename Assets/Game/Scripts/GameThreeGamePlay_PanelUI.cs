@@ -68,7 +68,7 @@ public class GameThreeGamePlay_PanelUI : MonoBehaviour
     public void UpdatePlayerLevel()
     {
         playerLevel++;
-        PlayerPrefs.SetInt("PlayerLevel", playerLevel);
+        //PlayerPrefs.SetInt("PlayerLevel", playerLevel);
     }
 
     public void NextLevel()
@@ -455,5 +455,25 @@ public class GameThreeGamePlay_PanelUI : MonoBehaviour
                 break;
             }
         }
+    }
+
+    public void ShowExplanationAndAdvance()
+    {
+        // Display the correct-answer sprite & description panel
+        questionImage.sprite = GameThreeManager.instance.currentLevel.correctAnswerSprite;
+        correctAnswerPanel.SetActive(true);
+
+        // After a delay, hide panel and go to next question
+        StartCoroutine(AdvanceAfterExplanation());
+    }
+
+    private IEnumerator AdvanceAfterExplanation()
+    {
+        // Match your existing timings
+        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(7f);
+        correctAnswerPanel.SetActive(false);
+        NextLevel();
     }
 }

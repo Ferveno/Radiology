@@ -22,7 +22,7 @@ public class GameThreeManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        CheckStatusOfIsAnswered();
+        //CheckStatusOfIsAnswered();
     }
 
     public void FindNextLevel()
@@ -69,8 +69,8 @@ public class GameThreeManager : MonoBehaviour
             if (selectedOption == currentLevel.correctAnswer)
             {
                 currentLevel.isAnswered = true;
-                PlayerPrefs.SetInt("CheckStatus" + allLevels.IndexOf(currentLevel), 1);
-                PlayerPrefs.Save();
+                //PlayerPrefs.SetInt("CheckStatus" + allLevels.IndexOf(currentLevel), 1);
+                //PlayerPrefs.Save();
             }
 
             FindNextLevel();

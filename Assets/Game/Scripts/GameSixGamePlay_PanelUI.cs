@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System.Linq;
 
 public class GameSixGamePlay_PanelUI : MonoBehaviour
 {
@@ -22,6 +23,9 @@ public class GameSixGamePlay_PanelUI : MonoBehaviour
     // Glasses powerup state and coroutine
     public bool glassesActive = false;
     private Coroutine glassesCoroutine;
+
+    public TextMeshProUGUI questionCountText;
+
 
     private void Awake()
     {
@@ -53,10 +57,24 @@ public class GameSixGamePlay_PanelUI : MonoBehaviour
         DeactivateGlasses();
 
         GameSixManager.instance.FindNextLevel();
+
+        UpdateQuestionCounter();
+
         StartTimer(); // Start the timer when a new question appears
     }
 
-    void ResetButtonStates()
+     /// <summary>
+    /// Shows how many questions are still unanswered.
+    /// </summary>
+    private void UpdateQuestionCounter()
+    {
+        int total = GameSixManager.instance.allLevels.Count;
+        int answered = GameSixManager.instance.allLevels.Count(l => l.isAnswered);
+        int left = total - answered;
+        questionCountText.text = $"Questions left: {left}/{total}";
+    }
+
+void ResetButtonStates()
     {
         foreach (Button button in optionButtons_Ref)
         {

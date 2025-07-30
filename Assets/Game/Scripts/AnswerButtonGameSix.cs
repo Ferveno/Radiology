@@ -14,56 +14,56 @@ public class AnswerButtonGameSix : MonoBehaviour
 
     private void OnClick()
     {
-        // Stop the timer and remove any glasses highlight when the player clicks.
+        // 1) Stop the timer and glasses
         GameSixGamePlay_PanelUI.instance.StopTimer();
         GameSixGamePlay_PanelUI.instance.DeactivateGlasses();
 
+        // 2) **Disable all option buttons** immediately
+        foreach (var btn in GameSixGamePlay_PanelUI.instance.optionButtons_Ref)
+            btn.interactable = false;
+
+        // 3) Check this button’s text
         TextMeshProUGUI answerText = GetComponentInChildren<TextMeshProUGUI>();
-        if (answerText != null)
-        {
-            string buttonTextString = answerText.text;
-            if (buttonTextString == GameSixManager.instance.currentLevel.correctAnswer)
-            {
-                answerText.color = Color.white;
-                button.image.color = Color.green;
+        if (answerText == null) return;
 
-                for (int i = 0; i < GameSixManager.instance.allLevels.Count; i++)
+        bool correct = answerText.text == GameSixManager.instance.currentLevel.correctAnswer;
+        // 4) In both cases, mark this question answered
+        GameSixManager.instance.currentLevel.isAnswered = true;
+
+        if (correct)
+        {
+            // — correct answer flow —
+            answerText.color = Color.white;
+            button.image.color = Color.green;
+
+            GameManager.instance.Score++;
+            GameManager.instance.ScoreUpdater();
+        }
+        else
+        {
+            // — wrong answer flow —
+            answerText.color = Color.white;
+            button.image.color = Color.red;
+
+            // highlight the right one in green
+            for (int i = 0; i < GameSixGamePlay_PanelUI.instance.optionButtons_Ref.Length; i++)
+            {
+                var btnRef = GameSixGamePlay_PanelUI.instance.optionButtons_Ref[i];
+                if (btnRef.GetComponentInChildren<TextMeshProUGUI>().text
+                    == GameSixManager.instance.currentLevel.correctAnswer)
                 {
-                    if (GameSixManager.instance.allLevels[i] == GameSixManager.instance.currentLevel)
-                    {
-                        GameSixManager.instance.allLevels[i].isAnswered = true;
-                        GameManager.instance.Score++;
-                        GameManager.instance.ScoreUpdater();
-                    }
+                    btnRef.image.color = Color.green;
                 }
-                StartCoroutine(WaitForNextQuestion());
-            }
-            else
-            {
-                OnClick_WrongButton();
-                answerText.color = Color.white;
-                button.image.color = Color.red;
             }
         }
-    }
 
-    void OnClick_WrongButton()
-    {
-        // Highlight the correct answer in green if answered wrong.
-        for (int i = 0; i < GameSixGamePlay_PanelUI.instance.optionButtons_Ref.Length; i++)
-        {
-            if (GameSixGamePlay_PanelUI.instance.optionButtons_Ref[i]
-                .GetComponentInChildren<TextMeshProUGUI>().text == GameSixManager.instance.currentLevel.correctAnswer)
-            {
-                GameSixGamePlay_PanelUI.instance.optionButtons_Ref[i].image.color = Color.green;
-            }
-        }
+        // 5) Wait and move on
         StartCoroutine(WaitForNextQuestion());
     }
 
     public IEnumerator WaitForNextQuestion()
     {
-        yield return new WaitForSeconds(1f);  // Reduced delay for smoother transition
+        yield return new WaitForSeconds(1f);
         GameSixManager.instance.currentLevel = null;
         GameSixGamePlay_PanelUI.instance.NextLevel();
     }

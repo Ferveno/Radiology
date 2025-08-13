@@ -23,6 +23,8 @@ public class DialogueManager : MonoBehaviour
     private int currentIndex = 0;
     private bool isTyping = false;
 
+    public bool isIntroDialogue = false; // Flag to check if this is an intro dialogue
+
     void Start()
     {
         if (dialogues.Length == 0)
@@ -111,6 +113,16 @@ public class DialogueManager : MonoBehaviour
     {
         // disable the entire panel (and its script)
         gameObject.SetActive(false);
+
+        if (isIntroDialogue)
+        {
+            GameManager.instance.OnClickHelpButton();
+        }
+        else { 
+            GameManager.instance.JoyStickCanvas.SetActive(true);
+        }
+
+
     }
 
     void ToggleAllImages(bool on)

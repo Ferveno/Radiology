@@ -45,6 +45,8 @@ public class GameManager : MonoBehaviour
     public GameObject HelpSubpanel1;
     public GameObject HelpSubpanel2;
     public GameObject HelpSubpanel3;
+    public GameObject HelpPanelCloseButton;
+    public GameObject HelpPanelGotItButton;
 
     int MaxPossibleScore = 98;
     public GameObject GameOverPanel;
@@ -60,6 +62,13 @@ public class GameManager : MonoBehaviour
     public GameObject Minimap;
     public GameObject MissionProgressUI;
 
+    public GameObject Game1Instructions;
+    public GameObject Game2Instructions;
+    public GameObject Game3Instructions;
+    public GameObject Game4Instructions;
+    public GameObject Game5Instructions;
+    public GameObject Game6Instructions;
+
 
     public GameObject Player;
 
@@ -72,6 +81,13 @@ public class GameManager : MonoBehaviour
 
     private float progressAnimDuration = 0.8f;    // how long the fill takes
     private Ease progressEase = Ease.OutCubic;
+
+    public GameObject IntroPanel;
+
+    [Header("Post Mini-Game Dialogues")]
+    public GameObject PostGame1Dialogue;
+    public GameObject PostGame4Dialogue;
+    public GameObject HurdleCollisionMessage;
 
     private void Awake()
     {
@@ -145,7 +161,6 @@ public class GameManager : MonoBehaviour
     public void OnGame1Start()
     {
         JoyStickCanvas.SetActive(false);
-        Game1.SetActive(true);
         Game1Key.SetActive(false);
         ScoreText.rectTransform.anchoredPosition = new Vector3(735f, 0f, 0f);
         ScoreHolder.SetActive(false);
@@ -157,13 +172,20 @@ public class GameManager : MonoBehaviour
         PlayerCam.SetActive(false);
         PlayerVirtualCam.SetActive(false);
         Game2Cam.SetActive(true);
+
+        Game1Instructions.SetActive(true);
+    }
+
+    public void StartGame1Now() {
+        Game1Instructions.SetActive(false);
+        Game1.SetActive(true);
     }
 
 
     public void OnGame1Complete() {
         Game1.SetActive(false);
         Room2Hurldes.SetActive(false);
-        JoyStickCanvas.SetActive(true);
+        //JoyStickCanvas.SetActive(true);
         ScoreText.rectTransform.anchoredPosition = new Vector3(0f, 0f, 0f);
         ScoreHolder.SetActive(true);
         Minimap.SetActive(true);
@@ -176,6 +198,8 @@ public class GameManager : MonoBehaviour
         Game2Cam.SetActive(false);
 
         AnimateMissionProgress();
+
+        PostGame1Dialogue.SetActive(true); // Activate the dialogue after Game 1 completion
     }
 
 
@@ -184,15 +208,26 @@ public class GameManager : MonoBehaviour
         JoyStickCanvas.SetActive(false);
         PlayerCamera.SetActive(false);
         Game2Camera.SetActive(true);
-        Game2.SetActive(true);
         Game2Key.SetActive(false);
         ScoreText.rectTransform.anchoredPosition = new Vector3(735f, 0f, 0f);
         ScoreHolder.SetActive(false);
         Minimap.SetActive(false);
         MissionProgressUI.SetActive(false);
-
         Player.gameObject.tag = "Untagged";
+        PlayerCam.SetActive(false);
+        PlayerVirtualCam.SetActive(false);
+        Game2Cam.SetActive(true);
+        Game2Instructions.SetActive(true);
+
+        Game2Instructions.SetActive(true);
     }
+
+    public void StartGame2Now()
+    {
+        Game2Instructions.SetActive(false);
+        Game2.SetActive(true);
+    }
+
     public void OnGame2Complete()
     {
         Room3Hurldes.SetActive(false);
@@ -211,23 +246,27 @@ public class GameManager : MonoBehaviour
     }
 
     public void OnGame3Start()
-    {
+    {     
         JoyStickCanvas.SetActive(false);
-        Game3.SetActive(true);
         Game3Key.SetActive(false);
         ScoreText.rectTransform.anchoredPosition = new Vector3(180f, -960f, 0f);
         ScoreHolder.SetActive(false);
         Minimap.SetActive(false);
         MissionProgressUI.SetActive(false);
-
         Player.gameObject.tag = "Untagged";
-
-
         PlayerCam.SetActive(false);
         PlayerVirtualCam.SetActive(false);
         Game2Cam.SetActive(true);
+
+        Game3Instructions.SetActive(true);
+
     }
 
+    public void StartGame3Now()
+    {
+        Game3Instructions.SetActive(false);
+        Game3.SetActive(true);
+    }
 
     public void OnGame3Complete()
     {
@@ -251,24 +290,27 @@ public class GameManager : MonoBehaviour
     public void OnGame4Start()
     {
         JoyStickCanvas.SetActive(false);
-
         PlayerCamera.SetActive(false);
         Game2Camera.SetActive(true);
 
-        Game4.SetActive(true);
         Game4Key.SetActive(false);
         ScoreText.rectTransform.anchoredPosition = new Vector3(730f, -980f, 0f);
         ScoreHolder.SetActive(false);
         Minimap.SetActive(false);
         MissionProgressUI.SetActive(false);
-
         Player.gameObject.tag = "Untagged";
-
         PlayerCam.SetActive(false);
         PlayerVirtualCam.SetActive(false);
         Game2Cam.SetActive(true);
+
+        Game4Instructions.SetActive(true);
     }
 
+    public void StartGame4Now()
+    {
+        Game4Instructions.SetActive(false);
+        Game4.SetActive(true);
+    }
 
     public void OnGame4Complete()
     {
@@ -278,7 +320,7 @@ public class GameManager : MonoBehaviour
         Game2Camera.SetActive(false);
 
         Room5Hurldes.SetActive(false);
-        JoyStickCanvas.SetActive(true);
+        //JoyStickCanvas.SetActive(true);
         ScoreText.rectTransform.anchoredPosition = new Vector3(0f, 0f, 0f);
         ScoreHolder.SetActive(true);
         Minimap.SetActive(true);
@@ -291,29 +333,33 @@ public class GameManager : MonoBehaviour
         Game2Cam.SetActive(false);
 
         AnimateMissionProgress();
+
+        PostGame4Dialogue.SetActive(true); // Activate the dialogue after Game 4 completion
     }
 
     public void OnGame5Start()
     {
         JoyStickCanvas.SetActive(false);
-
         PlayerCamera.SetActive(false);
         Game2Camera.SetActive(true);
-
-        Game5.SetActive(true);
         Game5Key.SetActive(false);
         ScoreText.rectTransform.anchoredPosition = new Vector3(730f, -980f, 0f);
         ScoreHolder.SetActive(false);
         Minimap.SetActive(false);
         MissionProgressUI.SetActive(false);
-
         Player.gameObject.tag = "Untagged";
-
         PlayerCam.SetActive(false);
         PlayerVirtualCam.SetActive(false);
         Game2Cam.SetActive(true);
+
+        Game5Instructions.SetActive(true);
     }
 
+    public void StartGame5Now()
+    {
+        Game5Instructions.SetActive(false);
+        Game5.SetActive(true);
+    }
 
     public void OnGame5Complete()
     {
@@ -341,22 +387,26 @@ public class GameManager : MonoBehaviour
     public void OnGame6Start()
     {
         JoyStickCanvas.SetActive(false);
-
         PlayerCamera.SetActive(false);
         Game2Camera.SetActive(true);
-
-        Game6.SetActive(true);
         Game6Key.SetActive(false);
         ScoreText.rectTransform.anchoredPosition = new Vector3(730f, -980f, 0f);
         ScoreHolder.SetActive(false);
         Minimap.SetActive(false);
         MissionProgressUI.SetActive(false);
-
         Player.gameObject.tag = "Untagged";
-
         PlayerCam.SetActive(false);
         PlayerVirtualCam.SetActive(false);
         Game2Cam.SetActive(true);
+
+        Game6Instructions.SetActive(true);
+    }
+
+    public void StartGame6Now()
+    {
+        Game6Instructions.SetActive(false);
+        Game6.SetActive(true);
+        
     }
 
 
@@ -390,6 +440,25 @@ public class GameManager : MonoBehaviour
 
     public void OnClickStartButton() {
 
+        IntroPanel.SetActive(true);
+
+        HelpPanelCloseButton.SetActive(false);
+        HelpPanelGotItButton.SetActive(true);
+
+        //PlayerCam.SetActive(true);
+        //PlayerVirtualCam.SetActive(true);
+
+        //Game2Cam.SetActive(false);
+
+        //HelpPanel.SetActive(false);
+        //MainMenuPanel.SetActive(false);
+        //JoyStickCanvas.SetActive(true);
+    }
+
+    public void StartNewGame() {
+
+        IntroPanel.SetActive(false);
+
         PlayerCam.SetActive(true);
         PlayerVirtualCam.SetActive(true);
 
@@ -421,6 +490,15 @@ public class GameManager : MonoBehaviour
     }
 
     public void OnClickHelpPanelGotitButton()
+    {
+        HelpSubpanel1.SetActive(false);
+        HelpSubpanel3.SetActive(false);
+        HelpPanel.SetActive(false);
+
+        StartNewGame();
+    }
+
+    public void OnClickHelpPanelCloseButton()
     {
         HelpSubpanel1.SetActive(false);
         HelpSubpanel3.SetActive(false);

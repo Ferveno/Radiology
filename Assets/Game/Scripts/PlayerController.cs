@@ -86,11 +86,23 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.gameObject.CompareTag("Blocker"))
+        {
+            GameManager.instance.HurdleCollisionMessage.SetActive(true);
+            Invoke(nameof(CloseHurdleCollisionMessage),1.5f);
+
+        }
+
         if (!_configMap.TryGetValue(collision.gameObject.tag, out var cfg))
             return;
 
         collision.gameObject.SetActive(false);
-        DoCharacterChangeAnimation(cfg);
+        DoCharacterChangeAnimation(cfg); 
+    }
+
+    private void CloseHurdleCollisionMessage()
+    {
+        GameManager.instance.HurdleCollisionMessage.SetActive(false);
     }
 
     private void DoCharacterChangeAnimation(CharacterConfig cfg)

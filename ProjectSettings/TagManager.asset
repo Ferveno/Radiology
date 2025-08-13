@@ -12,6 +12,7 @@ TagManager:
   - Game4Key
   - Game5Key
   - Game6Key
+  - Blocker
   layers:
   - Default
   - TransparentFX

@@ -232,7 +232,8 @@ public class GameManager : MonoBehaviour
     {
         Room3Hurldes.SetActive(false);
         JoyStickCanvas.SetActive(true);
-        PlayerCamera.SetActive(true);
+        PlayerCam.SetActive(true);
+        PlayerVirtualCam.SetActive(true);
         Game2Camera.SetActive(false);
         Game2.SetActive(false);
         ScoreText.rectTransform.anchoredPosition = new Vector3(0f, 0f, 0f);

@@ -89,6 +89,9 @@ public class GameManager : MonoBehaviour
     public GameObject PostGame4Dialogue;
     public GameObject HurdleCollisionMessage;
 
+    public bool AllGamesTestMode = false;
+    public GameObject GameTestPanel;
+
     private void Awake()
     {
         if (instance == null)
@@ -174,6 +177,12 @@ public class GameManager : MonoBehaviour
         Game2Cam.SetActive(true);
 
         Game1Instructions.SetActive(true);
+
+        if (AllGamesTestMode) { 
+            GameTestPanel.SetActive(false);
+            MainMenuPanel.SetActive(false);
+        }
+
     }
 
     public void StartGame1Now() {
@@ -220,6 +229,12 @@ public class GameManager : MonoBehaviour
         Game2Instructions.SetActive(true);
 
         Game2Instructions.SetActive(true);
+
+        if (AllGamesTestMode)
+        {
+            GameTestPanel.SetActive(false);
+            MainMenuPanel.SetActive(false);
+        }
     }
 
     public void StartGame2Now()
@@ -260,6 +275,12 @@ public class GameManager : MonoBehaviour
         Game2Cam.SetActive(true);
 
         Game3Instructions.SetActive(true);
+
+        if (AllGamesTestMode)
+        {
+            GameTestPanel.SetActive(false);
+            MainMenuPanel.SetActive(false);
+        }
 
     }
 
@@ -305,6 +326,12 @@ public class GameManager : MonoBehaviour
         Game2Cam.SetActive(true);
 
         Game4Instructions.SetActive(true);
+
+        if (AllGamesTestMode)
+        {
+            GameTestPanel.SetActive(false);
+            MainMenuPanel.SetActive(false);
+        }
     }
 
     public void StartGame4Now()
@@ -354,6 +381,12 @@ public class GameManager : MonoBehaviour
         Game2Cam.SetActive(true);
 
         Game5Instructions.SetActive(true);
+
+        if (AllGamesTestMode)
+        {
+            GameTestPanel.SetActive(false);
+            MainMenuPanel.SetActive(false);
+        }
     }
 
     public void StartGame5Now()
@@ -401,6 +434,12 @@ public class GameManager : MonoBehaviour
         Game2Cam.SetActive(true);
 
         Game6Instructions.SetActive(true);
+
+        if (AllGamesTestMode)
+        {
+            GameTestPanel.SetActive(false);
+            MainMenuPanel.SetActive(false);
+        }
     }
 
     public void StartGame6Now()
